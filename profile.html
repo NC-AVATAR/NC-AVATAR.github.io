@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Izyan Mini Mart - Home</title>
+    <title>Checkout - Izyan Mini Mart</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,24 +39,44 @@
             background: #555;
         }
 
-        .hero {
-            text-align: center;
+        .container {
             padding: 2rem;
-            background: #ffebf0;
-            color: #333;
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        .checkout-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+        .checkout-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
-        .hero button {
+        .checkout-form label {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .checkout-form input[type="text"],
+        .checkout-form input[type="email"],
+        .checkout-form input[type="tel"],
+        .checkout-form input[type="password"],
+        .checkout-form input[type="number"],
+        .checkout-form textarea,
+        .checkout-form select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .checkout-form button {
             background: #28a745;
             color: white;
             border: none;
@@ -64,54 +84,17 @@
             font-size: 1rem;
             border-radius: 5px;
             cursor: pointer;
+            display: block;
+            width: 100%;
         }
 
-        .hero button:hover {
+        .checkout-form button:hover {
             background: #218838;
         }
 
-        .container {
-            padding: 2rem;
-        }
-
-        .category-cards {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 2rem;
-        }
-
-        .category-card {
-            background-color: #fff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 23%;
-        }
-
-        .category-card img {
-            width: 80%;
-            max-width: 150px;
-            margin-bottom: 1rem;
-        }
-
-        .category-card h3 {
-            margin: 1rem 0;
-            font-size: 1.5rem;
-        }
-
-        .category-card a {
-            padding: 0.5rem 1rem;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
+        .card-details {
+            display: none; /* Initially hidden */
             margin-top: 1rem;
-        }
-
-        .category-card a:hover {
-            background-color: #218838;
         }
 
         footer {
@@ -126,12 +109,31 @@
 <body>
     <!-- Header -->
     <header>
-        Izyan Mini Mart
+        Izyan Mini Mart - Checkout
     </header>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="transaction history.html">Transaction Details</a>
-        <a href="profile.html">Profile</a>
-        <a href="cart.html">Checkout</a>
-    </nav>
+    <!-- Checkout Form -->
+    <div class="container">
+        <div class="checkout-form">
+            <h2>Checkout</h2>
+            <form id="checkoutForm">
+                <!-- Personal Information -->
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+
+                <label for="address">Shipping Address:</label>
+                <textarea id="address" name="address" rows="4" required></textarea>
+
+                <label for="payment">Payment Method:</label>
+                <select id="payment" name="payment" required onchange="showCardDetails()">
+                    <option value="">Select Payment Method</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
