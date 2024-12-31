@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Izyan Mini Mart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: #ff69b4;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav {
+            background: #333;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: #555;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        .checkout-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .checkout-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkout-form label {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .checkout-form input[type="text"],
+        .checkout-form input[type="email"],
+        .checkout-form input[type="tel"],
+        .checkout-form input[type="password"],
+        .checkout-form input[type="number"],
+        .checkout-form textarea,
+        .checkout-form select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .checkout-form button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+        }
+
+        .checkout-form button:hover {
+            background: #218838;
+        }
+
+        .card-details {
+            display: none; /* Initially hidden */
+            margin-top: 1rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        Izyan Mini Mart - Checkout
+    </header>
+
+    <!-- Checkout Form -->
+    <div class="container">
+        <div class="checkout-form">
+            <h2>Checkout</h2>
+            <form id="checkoutForm">
+                <!-- Personal Information -->
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+
+                <label for="address">Shipping Address:</label>
+                <textarea id="address" name="address" rows="4" required></textarea>
+
+                <label for="payment">Payment Method:</label>
+                <select id="payment" name="payment" required onchange="showCardDetails()">
+                    <option value="">Select Payment Method</option>
+                    <option value="credit_card">Credit Card</option>
+                    <option value="debit_card">Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+
+                <!-- Card Details (Initially hidden) -->
+                <div class="card-details" id="cardDetails">
+                    <label for="cardNumber">Card Number:</label>
+                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="16" />
+
+                    <label for="expiryDate">Expiry Date:</label>
+                    <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" />
+
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="3" />
+                </div>
+
+                <!-- Button to Submit Form -->
+                <button type="submit">Complete Checkout</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        // Show card details input fields when Credit/Debit card is selected
+        function showCardDetails() {
+            const paymentMethod = document.getElementById('payment').value;
+            const cardDetailsSection = document.getElementById('cardDetails');
+            
+            // Show card details if credit or debit card is selected
+            if (paymentMethod === 'credit_card' || paymentMethod === 'debit_card') {
+                cardDetailsSection.style.display = 'block';
+            } else {
+                cardDetailsSection.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Basic validation (you can add more as needed)
+            if (document.getElementById('payment').value === 'credit_card' || document.getElementById('payment').value === 'debit_card') {
+                if (!document.getElementById('cardNumber').value || !document.getElementById('expiryDate').value || !document.getElementById('cvv').value) {
+                    alert('Please fill in all card details.');
+                    return;
+                }
+            }
+
+            // Form handling logic (You can integrate with backend here)
+            alert('Your order has been placed successfully!');
+
+            // Redirect to transaction history page (transaction-history.html)
+            window.location.href = 'transaction history.html';
+        });
+    </script>
+</body>
+</html>

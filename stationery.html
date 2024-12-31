@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stationery - Izyan Mini Mart</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        Izyan Mini Mart - Stationery
+    </header>
+
+    <div class="container">
+        <h2>Stationery</h2>
+        <div class="product-grid" id="stationery"></div>
+    </div>
+
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        const products = [
+            { name: "PEN", price: 1.80, category: "Stationery", img: "https://utrading.com.my/wp-content/uploads/2021/01/PILOT-BL-G2-10-M.jpg" },
+            { name: "A4 PAPER", price: 19.00, category: "Stationery", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9ieAkgW8LtcecLkqVKVKEz92GOJQJiBe_hg&s" },
+            { name: "CORRECTION TAPE", price: 5.00, category: "Stationery", img: "https://pentel.com.my/wp-content/uploads/2019/05/ZT35-W.png" }
+        ];
+
+        function renderProducts() {
+            const categoryDiv = document.getElementById('stationery');
+            categoryDiv.innerHTML = '';
+
+            products.filter(product => product.category === "Stationery").forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>RM${product.price.toFixed(2)}</p>
+                    <button onclick="addToCart('${product.name}', ${product.price})">Add to Cart</button>
+                `;
+                categoryDiv.appendChild(productCard);
+            });
+        }
+
+        function addToCart(name, price) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find(item => item.name === name);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${name} has been added to your cart.`);
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>

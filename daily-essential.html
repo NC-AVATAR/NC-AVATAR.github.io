@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Essentials - Izyan Mini Mart</title>
+    
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        Izyan Mini Mart - Daily Essentials
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="category-section">
+            <h2>Daily Essentials</h2>
+            <div class="product-grid" id="dailyEssentials">
+                <!-- Products for Daily Essentials -->
+                <!-- Example product card -->
+                <div class="product-card">
+                    <img src="https://bsg-i.nbxc.com/product/68/90/ce/e4ace49d5f61018cecc6ae9b42.jpg" alt="Tisu">
+                    <h3>TISU</h3>
+                    <p>RM 2.00</p>
+                    <button onclick="addToCart('TISU', 2.00)">Add to Cart</button>
+                </div>
+                <!-- More products can go here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        function addToCart(name, price) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find(item => item.name === name);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${name} has been added to your cart.`);
+        }
+    </script>
+</body>
+</html>

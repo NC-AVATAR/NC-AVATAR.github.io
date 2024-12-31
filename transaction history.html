@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History - Izyan Mini Mart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: #ff69b4;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav {
+            background: #333;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: #555;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        .transaction-details {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .transaction-details h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .appreciation-message {
+            background-color: #f0f8ff;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .transaction-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .transaction-details th, .transaction-details td {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .transaction-details th {
+            background: #f2f2f2;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .back-btn:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        Izyan Mini Mart - Transaction History
+    </header>
+
+    <!-- Appreciation Message -->
+    <div class="container">
+        <div class="appreciation-message">
+            <h3>Thank You for Your Purchase!</h3>
+            <p>Your transaction has been successfully completed. We appreciate your business and look forward to serving you again!</p>
+        </div>
+
+        <!-- Transaction Details -->
+        <div class="transaction-details">
+            <h2>Transaction Summary</h2>
+            
+            <!-- Table to display purchased items -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionItems">
+                    <!-- Transaction items will be added here dynamically -->
+                </tbody>
+            </table>
+
+            <!-- Total Price -->
+            <div>
+                <strong>Total Amount: RM <span id="totalAmount">0.00</span></strong>
+            </div>
+
+            <!-- Button to go back to the homepage -->
+            <a href="index.html" class="back-btn">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        // Retrieve cart data from localStorage
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const transactionItemsContainer = document.getElementById("transactionItems");
+        const totalAmountContainer = document.getElementById("totalAmount");
+
+        let totalAmount = 0;
+
+        // Populate the table with the cart items
+        cart.forEach(item => {
+            const row = document.createElement("tr");
+
+            // Product Name
+            const productName = document.createElement("td");
+            productName.textContent = item.name;
+            row.appendChild(productName);
+
+            // Price
+            const price = document.createElement("td");
+            price.textContent = `RM ${item.price.toFixed(2)}`;
+            row.appendChild(price);
+
+            // Quantity
+            const quantity = document.createElement("td");
+            quantity.textContent = item.quantity;
+            row.appendChild(quantity);
+
+            // Total (Price * Quantity)
+            const itemTotal = document.createElement("td");
+            const itemTotalAmount = item.price * item.quantity;
+            itemTotal.textContent = `RM ${itemTotalAmount.toFixed(2)}`;
+            row.appendChild(itemTotal);
+
+            // Add row to table
+            transactionItemsContainer.appendChild(row);
+
+            // Update the total amount
+            totalAmount += itemTotalAmount;
+        });
+
+        // Display the total amount
+        totalAmountContainer.textContent = totalAmount.toFixed(2);
+    </script>
+</body>
+</html>

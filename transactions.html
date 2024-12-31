@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Transactions</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            color: #333;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        td button {
+            background-color: #f44336;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        td button:hover {
+            background-color: #d32f2f;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            td button {
+                padding: 8px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Manage Transactions</h1>
+</header>
+
+<div class="container">
+    <!-- Transaction Form to Add New Transaction -->
+    <div class="form-container">
+        <h3>Add New Transaction</h3>
+        <form id="transaction-form">
+            <label for="user-id">User ID:</label>
+            <input type="number" id="user-id" required><br>
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" step="0.01" required><br>
+
+            <label for="status">Status:</label>
+            <select id="status" required>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="failed">Failed</option>
+            </select><br>
+
+            <button type="submit">Add Transaction</button>
+        </form>
+    </div>
+
+    <!-- List of Transactions -->
+    <div class="transaction-list">
+        <h3>Transaction List</h3>
+        <table id="transaction-table">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>User ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="transaction-list">
+                <!-- Transactions will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchTransactions();
+
+        // Add New Transaction
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const userId = document.getElementById('user-id').value;
+            const amount = document.getElementById('amount').value;
+            const status = document.getElementById('status').value;
+
+            fetch('add_transaction.php', {
+                method: 'POST',
+                body: JSON.stringify({ userId, amount, status }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Transaction added successfully!');
+                    fetchTransactions();  // Reload transaction list
+                } else {
+                    alert('Error adding transaction!');
+                }
+            });
+        });
+    });
+
+    // Fetch transactions from the backend
+    function fetchTransactions() {
+        fetch('get_transactions.php')
+            .then(response => response.json())
+            .then(data => {
+                const transactionList = document.getElementById('transaction-list');
+                transactionList.innerHTML = '';  // Clear existing transactions
+
+                data.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.transaction_id}</td>
+                        <td>${transaction.user_id}</td>
+                        <td>${transaction.amount}</td>
+                        <td>${transaction.status}</td>
+                        <td>${transaction.date}</td>
+                        <td class="actions">
+                            <button onclick="deleteTransaction(${transaction.transaction_id})">Delete</button>
+                            <button onclick="editTransaction(${transaction.transaction_id})">Edit</button>
+                        </td>
+                    `;
+                    transactionList.appendChild(row);
+                });
+            });
+    }
+
+    // Delete transaction
+    function deleteTransaction(transactionId) {
+        fetch('delete_transaction.php', {
+            method: 'POST',
+            body: JSON.stringify({ transactionId }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Transaction deleted!');
+                fetchTransactions();  // Reload transaction list
+            } else {
+                alert('Error deleting transaction!');
+            }
+        });
+    }
+
+    // Edit transaction (not implemented in this demo)
+    function editTransaction(transactionId) {
+        alert('Edit functionality not implemented in this demo');
+    }
+</script>
+
+</body>
+</html>

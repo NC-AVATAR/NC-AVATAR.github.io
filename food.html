@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food - Izyan Mini Mart</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <header>
+        Izyan Mini Mart - Food
+    </header>
+
+    <div class="container">
+        <h2>Food</h2>
+        <div class="product-grid" id="food"></div>
+    </div>
+
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        const products = [
+            { name: "MAGGI KARI", price: 5.60, category: "Food", img: "https://www.maggi.my/sites/default/files/styles/product_image_desktop_617_900/public/F6.png?itok=ebAUNbJ8" }
+        ];
+
+        function renderProducts() {
+            const categoryDiv = document.getElementById('food');
+            categoryDiv.innerHTML = '';
+
+            products.filter(product => product.category === "Food").forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.img}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>RM${product.price.toFixed(2)}</p>
+                    <button onclick="addToCart('${product.name}', ${product.price})">Add to Cart</button>
+                `;
+                categoryDiv.appendChild(productCard);
+            });
+        }
+
+        function addToCart(name, price) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const existingItem = cart.find(item => item.name === name);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${name} has been added to your cart.`);
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>

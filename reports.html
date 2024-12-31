@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: orange;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+            max-width: 1200px;
+        }
+
+        .report-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .report-card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .report-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .transaction-status-chart {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .transaction-status-chart h3 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: orange;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        .actions button {
+            background-color: #f44336;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background-color: #d32f2f;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2em;
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Reports</h1>
+</header>
+
+<div class="container">
+    <!-- Total Sales Report -->
+    <div class="report-card">
+        <h3>Total Sales</h3>
+        <div id="total-sales" class="value">Loading...</div>
+    </div>
+
+    <!-- Total Transactions Report -->
+    <div class="report-card">
+        <h3>Total Transactions</h3>
+        <div id="total-transactions" class="value">Loading...</div>
+    </div>
+
+    <!-- Transaction Status Report -->
+    <div class="transaction-status-chart">
+        <h3>Transactions by Status</h3>
+        <canvas id="status-chart" width="400" height="400"></canvas>
+    </div>
+
+    <!-- Transaction List Report -->
+    <div class="transaction-list">
+        <h3>Recent Transactions</h3>
+        <table id="transaction-report-table">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>User ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="transaction-report-list">
+                <!-- Transactions will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Loading indicator -->
+<div class="loading" id="loading-message" style="display: none;">
+    Loading reports, please wait...
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchReports();
+    });
+
+    function fetchReports() {
+        document.getElementById('loading-message').style.display = 'block';
+
+        // Fetch reports data from the backend
+        fetch('get_reports.php')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading-message').style.display = 'none';
+                
+                // Update Total Sales
+                document.getElementById('total-sales').textContent = '$' + data.totalSales.toFixed(2);
+                
+                // Update Total Transactions
+                document.getElementById('total-transactions').textContent = data.totalTransactions;
+
+                // Update Transaction Status Chart
+                updateTransactionStatusChart(data.transactionStatus);
+
+                // Update Recent Transactions Table
+                updateTransactionReportTable(data.recentTransactions);
+            })
+            .catch(error => {
+                document.getElementById('loading-message').style.display = 'none';
+                alert('Error fetching reports data: ' + error);
+            });
+    }
+
+    function updateTransactionStatusChart(statusData) {
+        const ctx = document.getElementById('status-chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Completed', 'Failed'],
+                datasets: [{
+                    data: [statusData.pending, statusData.completed, statusData.failed],
+                    backgroundColor: ['#FFEB3B', '#4CAF50', '#F44336'],
+                    borderColor: ['#FFEB3B', '#4CAF50', '#F44336'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    }
+
+    function updateTransactionReportTable(transactions) {
+        const transactionReportList = document.getElementById('transaction-report-list');
+        transactionReportList.innerHTML = '';  // Clear existing rows
+
+        transactions.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transaction.transaction_id}</td>
+                <td>${transaction.user_id}</td>
+                <td>$${transaction.amount}</td>
+                <td>${transaction.status}</td>
+                <td>${transaction.date}</td>
+            `;
+            transactionReportList.appendChild(row);
+        });
+    }
+</script>
+
+</body>
+</html>

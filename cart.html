@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Cart - Izyan Mini Mart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: #ff69b4;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        nav {
+            background: #333;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: #555;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        th {
+            background: #ff69b4;
+            color: white;
+        }
+
+        .cart-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .cart-actions button {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .btn-update {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-update:hover {
+            background: #0056b3;
+        }
+
+        .btn-checkout {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-checkout:hover {
+            background: #218838;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        Izyan Mini Mart
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Your Cart</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price (RM)</th>
+                    <th>Quantity</th>
+                    <th>Subtotal (RM)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="cartItems">
+                <!-- Dynamic content will be added here -->
+            </tbody>
+        </table>
+
+        <!-- Cart Actions -->
+        <div class="cart-actions">
+            <button class="btn-update" onclick="updateCart()">Update Cart</button>
+            <button class="btn-checkout" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2024 Izyan Mini Mart. All rights reserved.
+    </footer>
+
+    <script>
+        // Load cart from localStorage, or initialize it if empty
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Render cart items to the page
+        function renderCart() {
+            const cartItems = document.getElementById("cartItems");
+            cartItems.innerHTML = ""; // Clear existing items
+
+            cart.forEach((item, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>
+                        <input type="number" value="${item.quantity}" min="1" data-index="${index}" style="width: 60px;">
+                    </td>
+                    <td>${(item.price * item.quantity).toFixed(2)}</td>
+                    <td>
+                        <button onclick="removeFromCart(${index})" style="color: red; background: none; border: none; cursor: pointer;">Remove</button>
+                    </td>
+                `;
+                cartItems.appendChild(row);
+            });
+        }
+
+        // Update cart when the quantity of an item is changed
+        function updateCart() {
+            const inputs = document.querySelectorAll("input[type='number']");
+            inputs.forEach(input => {
+                const index = input.getAttribute("data-index");
+                cart[index].quantity = parseInt(input.value);
+            });
+            localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart to localStorage
+            renderCart();
+            alert("Cart updated successfully!");
+        }
+
+        // Remove item from the cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart)); // Save updated cart to localStorage
+            renderCart();
+        }
+
+        // Proceed to checkout, save cart to localStorage, and navigate to checkout page
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart)); // Save cart data to localStorage before checkout
+            window.location.href = "checkout.html"; // Navigate to the checkout page
+        }
+
+        renderCart(); // Initial call to render the cart
+    </script>
+</body>
+</html>
