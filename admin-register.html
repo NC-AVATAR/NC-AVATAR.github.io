@@ -112,5 +112,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Handle registration form submission
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form input values
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            // Store the user data in localStorage (replace with server-side in production)
+            const user = { name, email, password };
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Redirect to the login page after successful registration
+            alert('Registration successful! Please login to continue.');
+            window.location.href = 'Login.html';  // Redirect to login page
+        });
+    </script>
 </body>
 </html>
