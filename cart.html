@@ -192,7 +192,7 @@
 
         // Proceed to checkout, save cart to localStorage, and navigate to checkout page
         function checkout() {
-            if (cart.length === 0 || isLoggedIn !== true) {
+            if (cart.length === 0) {
                 alert("Your cart is empty or you're not logged in");
                 return;
             }
