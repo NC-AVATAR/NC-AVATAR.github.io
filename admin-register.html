@@ -113,33 +113,23 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+       <script>
+        // Handle registration form submission
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form input values
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const user = { name, email, password };
-            fetch('http://YOUR_SERVER_URL/api/users', { // Replace with your server URL
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                window.location.href = 'admin-login.html';
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+            const password = document.getElementById('confirm-password').value;
+
+            // Store the user data in localStorage (replace with server-side in production)
+            const admin = { name, email, password };
+            localStorage.setItem('admin', JSON.stringify(admin));
+
+            // Redirect to the login page after successful registration
+            alert('Registration successful! Please login to continue.');
+            window.location.href = 'admin-login.html';  // Redirect to login page
         });
     </script>
     
