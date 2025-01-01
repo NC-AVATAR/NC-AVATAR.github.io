@@ -93,25 +93,17 @@
         <div class="form-container">
             <h2>Register</h2>
             <form action="admin-login.html" method="POST">
-                <div class="input-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
-                </div>
 
-                <div class="input-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
-                </div>
-                    
-                <div class="input-group">
+
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
-                </div>
-                    
-                <div class="input-group">
+
                 <label for="confirm-password">Confirm Password</label>
                 <input type="password" id="confirm-password" name="confirm-password" required>
-                </div>
 
                 <button type="submit">Register</button>
             </form>
@@ -120,25 +112,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Handle registration form submission
-        document.getElementById('registerForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Get form input values
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-
-            // Store the user data in localStorage (replace with server-side in production)
-            const user = { name, email, password };
-            localStorage.setItem('user', JSON.stringify(user));
-
-            // Redirect to the login page after successful registration
-            alert('Registration successful! Please login to continue.');
-            window.location.href = 'admin-login.html';  // Redirect to login page
-        });
-    </script>
 </body>
 </html>
